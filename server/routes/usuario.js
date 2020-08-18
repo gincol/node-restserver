@@ -6,7 +6,7 @@ const {
   verificaToken,
   verificaAdminRol,
 } = require("../middlewares/autenticacion");
-const { existeUsuario } = require("../middlewares/varios");
+const { existeObjeto } = require("../middlewares/varios");
 const { response } = require("express");
 
 const app = express();
@@ -42,7 +42,7 @@ app.get("/usuario", verificaToken, function (req, res) {
 });
 
 //RECUPERAR UN USUARIO
-app.get("/usuario/:id", [verificaToken, existeUsuario], function (req, res) {
+app.get("/usuario/:id", [verificaToken, existeObjeto], function (req, res) {
   let id = req.params.id;
 
   Usuario.find({ _id: id, estado: true }).exec((err, usuario) => {
@@ -89,7 +89,7 @@ app.post("/usuario", [verificaToken, verificaAdminRol], function (req, res) {
 //ACTUALIZAR
 app.put(
   "/usuario/:id",
-  [verificaToken, verificaAdminRol, existeUsuario],
+  [verificaToken, verificaAdminRol, existeObjeto],
   function (req, res) {
     let id = req.params.id;
 
@@ -119,7 +119,7 @@ app.put(
 //BORRA CAMBIANDO ESTADO
 app.delete(
   "/usuario/:id",
-  [verificaToken, verificaAdminRol, existeUsuario],
+  [verificaToken, verificaAdminRol, existeObjeto],
   function (req, res) {
     let id = req.params.id;
 
@@ -133,7 +133,7 @@ app.delete(
       { new: true },
       (err, usuarioBorrado) => {
         if (err) {
-          return res.status(400).json({
+          return res.status(500).json({
             ok: false,
             err: err,
           });
